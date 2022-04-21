@@ -5,7 +5,7 @@ This is the first build!
 What is working:
 - target temp
 - power on/off
-- The thermostat is working
+- The thermostat good to use in HA
 
 Known issues:
 - Auto mode is not working, is need to implementing.
