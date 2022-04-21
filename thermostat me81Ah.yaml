@@ -1,0 +1,118 @@
+substitutions:
+  device_name: gabriel-thermostat
+  device_ip: 192.168.0.xx 
+esphome:
+  name: ${device_name}
+  platform: ESP8266
+  board: esp01_1m
+  on_boot:
+    priority: 600
+    then:
+      - switch.turn_off: power_switch
+
+# Make sure logging is not using the serial port
+logger:
+  baud_rate: 0
+  level: DEBUG
+  
+# Enable Home Assistant API
+api:
+
+ota:
+
+web_server:
+  port: 80
+  
+wifi:
+  ssid: ssidwifi #change
+  password: wifipass#change
+  fast_connect: true
+  manual_ip:
+    static_ip: ${device_ip}
+    gateway: 192.168.0.1
+    subnet: 255.255.255.0
+
+
+  # Enable fallback hotspot (captive portal) in case wifi connection fails
+  ap:
+    ssid: "ME81AH Thermostat"
+    password: "qwerty1234"
+captive_portal:
+
+uart:
+  rx_pin: GPIO3
+  tx_pin: GPIO1
+  baud_rate: 9600
+
+# Getting time from HA
+time:
+  - platform: homeassistant
+    id: ha_time
+
+# Register the Tuya MCU connection
+tuya:
+  time_id: ha_time
+  #on_datapoint_update:
+    #- sensor_datapoint: 24
+    #  datapoint_type: raw
+    #  then:
+        #- lambda: return x - 100; #* (9.0/5.0) + 32.0; # report temperature in Fahrenheit
+    #    id(temperature).publish_state(x[0] - 100);
+
+climate:
+  - platform: tuya
+    name: "${device_name}Thermostat"
+    switch_datapoint: 1
+    target_temperature_datapoint: 16
+    #target_temperature_multiplier: 100
+    current_temperature_datapoint: 24
+    eco_datapoint: 5
+    eco_temperature: 10 °C
+    temperature_multiplier: 1
+    visual:
+      min_temperature: 10 °C
+      max_temperature: 40 °C
+      temperature_step: 1 °C
+
+# Create a sensor
+sensor:
+  - platform: "tuya"
+    name: "${device_name} Temperature"
+    sensor_datapoint: 24
+    unit_of_measurement: "°C"
+    device_class: "temperature"
+    accuracy_decimals: 1
+    filters:
+      - multiply: 0.5
+      - lambda: return x - 100; #* (9.0/5.0) + 32.0; # report temperature in Fahrenheit
+  - platform: wifi_signal
+    name: "${upper_devicename} - Wifi Signal"
+    update_interval: 60s
+    icon: mdi:wifi
+
+  - platform: uptime
+    name: "${device_name} - Uptime"
+    update_interval: 60s
+    icon: mdi:clock-outline
+
+binary_sensor:
+  - platform: status
+    name: "${device_name} - Status"
+    device_class: connectivity
+
+switch:
+  - platform: "tuya"
+    name: "Power"
+    id: power_switch
+    switch_datapoint: 1
+    internal: true
+  - platform: "tuya"
+    name: "Eco Mode"
+    icon: "mdi:earth"
+    switch_datapoint: 5
+    internal: true
+  - platform: "tuya"
+    name: "Lock"
+    icon: "mdi:lock"
+    switch_datapoint: 6
+    internal: true
