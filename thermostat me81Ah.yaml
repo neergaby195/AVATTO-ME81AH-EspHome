@@ -1,5 +1,5 @@
 substitutions:
-  device_name: gabriel-thermostat
+  device_name: me81ah
   device_ip: 192.168.0.xx 
 esphome:
   name: ${device_name}
@@ -61,7 +61,7 @@ tuya:
 
 climate:
   - platform: tuya
-    name: "${device_name}Thermostat"
+    name: "${device_name} Thermostat"
     switch_datapoint: 1
     target_temperature_datapoint: 16
     #target_temperature_multiplier: 100
