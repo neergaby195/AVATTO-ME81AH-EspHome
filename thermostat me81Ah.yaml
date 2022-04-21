@@ -25,7 +25,7 @@ web_server:
   
 wifi:
   ssid: ssidwifi #change
-  password: wifipass#change
+  password: wifipass #change
   fast_connect: true
   manual_ip:
     static_ip: ${device_ip}
@@ -52,23 +52,18 @@ time:
 # Register the Tuya MCU connection
 tuya:
   time_id: ha_time
-  #on_datapoint_update:
-    #- sensor_datapoint: 24
-    #  datapoint_type: raw
-    #  then:
-        #- lambda: return x - 100; #* (9.0/5.0) + 32.0; # report temperature in Fahrenheit
-    #    id(temperature).publish_state(x[0] - 100);
 
 climate:
   - platform: tuya
-    name: "${device_name} Thermostat"
+    name: "${device_name}"
     switch_datapoint: 1
     target_temperature_datapoint: 16
-    #target_temperature_multiplier: 100
-    current_temperature_datapoint: 24
+    target_temperature_multiplier: 1
+    current_temperature_datapoint: 24  #24 #36 arat 1 grad
+    current_temperature_multiplier: 0.1
     eco_datapoint: 5
     eco_temperature: 10 °C
-    temperature_multiplier: 1
+    active_state_datapoint: 1
     visual:
       min_temperature: 10 °C
       max_temperature: 40 °C
@@ -76,6 +71,7 @@ climate:
 
 # Create a sensor
 sensor:
+  #optonal temp sensor
   - platform: "tuya"
     name: "${device_name} Temperature"
     sensor_datapoint: 24
@@ -83,13 +79,13 @@ sensor:
     device_class: "temperature"
     accuracy_decimals: 1
     filters:
-      - multiply: 0.5
-      - lambda: return x - 100; #* (9.0/5.0) + 32.0; # report temperature in Fahrenheit
+      - multiply: 0.1
+  #wifi singnal
   - platform: wifi_signal
     name: "${device_name} - Wifi Signal"
     update_interval: 60s
     icon: mdi:wifi
-
+  #device uptime
   - platform: uptime
     name: "${device_name} - Uptime"
     update_interval: 60s
