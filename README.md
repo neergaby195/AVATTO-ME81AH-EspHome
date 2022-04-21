@@ -5,9 +5,10 @@ This is the first build!
 What is working:
 - target temp
 - power on/off
-- Sensor temp is working partial
 - The thermostat is working
 
 Known issues:
-- The temp it's in °C but 25.0 is 250 °C
-- Auto mode is not working is need to implementing.
+- Auto mode is not working, is need to implementing.
+- Schedule is not implementing
+- Eco mod is not working
+- lock is not working
