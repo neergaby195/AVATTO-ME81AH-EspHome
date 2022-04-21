@@ -9,5 +9,5 @@ What is working:
 - The thermostat is working
 
 Known issues:
-The temp it's in °C but 25.0 is 250 °C
-Auto mode is not working is need to implementing.
+- The temp it's in °C but 25.0 is 250 °C
+- Auto mode is not working is need to implementing.
