@@ -86,7 +86,7 @@ sensor:
       - multiply: 0.5
       - lambda: return x - 100; #* (9.0/5.0) + 32.0; # report temperature in Fahrenheit
   - platform: wifi_signal
-    name: "${upper_devicename} - Wifi Signal"
+    name: "${device_name} - Wifi Signal"
     update_interval: 60s
     icon: mdi:wifi
 
